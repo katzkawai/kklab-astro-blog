@@ -24,3 +24,8 @@ GitHub Actions が自動でビルド・公開します。詳しくは投稿ガ�
 
 河合勝彦（名古屋市立大学大学院経済学研究科）
 kkawai@econ.nagoya-cu.ac.jp
+
+## 制作について
+
+このサイト（ページ・デザイン・サンプル記事・イラスト・投稿ガイド）は、
+Anthropic の AI モデル **Claude Opus 5.5**（[Claude Code](https://claude.com/claude-code) 経由）を使って作成しました。
