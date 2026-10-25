@@ -3,7 +3,7 @@
 フレンチ・ブルドッグのハナちゃん（1歳・女の子）の日記ブログです。
 [Astro](https://astro.build/) で作成し、GitHub Pages で公開しています。
 
-- 公開URL: https://katzkawai.github.io/kklab-astro-blog/
+- 公開URL: https://katzkawai.org/kklab-astro-blog/
 - 投稿ガイド: [`docs/guide/posting-guide.pdf`](docs/guide/posting-guide.pdf)（ソース: `docs/guide/posting-guide.tex`）
 
 ## 記事の追加
