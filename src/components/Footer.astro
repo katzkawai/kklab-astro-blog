@@ -10,6 +10,9 @@ const today = new Date();
 	<p>
 		連絡先：<a href={`mailto:${SITE_CONTACT}`}>{SITE_CONTACT}</a> ／ <a href={url('rss.xml')}>RSS</a>
 	</p>
+	<p class="credit">
+		このサイトは <a href="https://claude.com/claude-code">Claude Code</a>（Claude Opus 5.5）で作成しました。
+	</p>
 </footer>
 <style>
 	footer {
@@ -20,6 +23,9 @@ const today = new Date();
 	}
 	footer p {
 		margin: 0.3em 0;
+	}
+	.credit {
+		font-size: 0.9em;
 	}
 	.paws {
 		letter-spacing: 0.5em;
