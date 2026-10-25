@@ -1,0 +1,27 @@
+---
+import { SITE_AFFILIATION, SITE_AUTHOR, SITE_CONTACT, url } from '../consts';
+
+const today = new Date();
+---
+
+<footer>
+	<p class="paws" aria-hidden="true">🐾 🐾 🐾</p>
+	<p>&copy; {today.getFullYear()} {SITE_AUTHOR}（{SITE_AFFILIATION}）</p>
+	<p>
+		連絡先：<a href={`mailto:${SITE_CONTACT}`}>{SITE_CONTACT}</a> ／ <a href={url('rss.xml')}>RSS</a>
+	</p>
+</footer>
+<style>
+	footer {
+		padding: 2em 1em 4em 1em;
+		color: rgb(var(--gray));
+		text-align: center;
+		font-size: 0.85em;
+	}
+	footer p {
+		margin: 0.3em 0;
+	}
+	.paws {
+		letter-spacing: 0.5em;
+	}
+</style>

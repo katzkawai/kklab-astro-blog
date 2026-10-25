@@ -1,0 +1,61 @@
+---
+import { SITE_TITLE, url } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header>
+	<nav>
+		<h2>
+			<a href={url()}><img src={url('favicon.svg')} alt="" width="32" height="32" />{SITE_TITLE}</a>
+		</h2>
+		<div class="internal-links">
+			<HeaderLink href={url()}>ホーム</HeaderLink>
+			<HeaderLink href={url('blog/')}>日記</HeaderLink>
+			<HeaderLink href={url('about/')}>ハナちゃんについて</HeaderLink>
+		</div>
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1em;
+		background: #fffaf3;
+		box-shadow: 0 2px 8px rgba(var(--black), 6%);
+	}
+	h2 {
+		margin: 0;
+		font-size: 1.1em;
+	}
+	h2 a {
+		display: flex;
+		align-items: center;
+		gap: 0.4em;
+		color: rgb(var(--black));
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	nav a {
+		padding: 0.9em 0.5em;
+		color: rgb(var(--black));
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+	}
+	nav :global(a.active) {
+		border-bottom-color: var(--accent);
+	}
+	@media (max-width: 720px) {
+		nav {
+			justify-content: center;
+		}
+		nav a {
+			padding: 0.5em 0.4em;
+			font-size: 0.9em;
+		}
+	}
+</style>

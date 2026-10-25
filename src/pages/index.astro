@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import HeroImage from '../assets/hana-about.jpg';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import PostList from '../components/PostList.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, url } from '../consts';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 6);
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 960px;
+			}
+			.hero {
+				text-align: center;
+				margin-bottom: 3em;
+			}
+			.hero img {
+				width: 100%;
+				height: auto;
+				border-radius: 20px;
+				box-shadow: var(--box-shadow);
+			}
+			.hero h1 {
+				margin: 0.6em 0 0.2em;
+			}
+			.hero p {
+				margin: 0;
+				color: rgb(var(--gray));
+			}
+			.more {
+				text-align: center;
+				margin-top: 2em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="hero">
+				<Image src={HeroImage} width={960} height={480} alt="ハナちゃんのイラスト" loading="eager" />
+				<h1>{SITE_TITLE}</h1>
+				<p>フレンチ・ブルドッグのハナちゃん（1歳・女の子）の毎日をつづります。</p>
+			</section>
+			<section>
+				<h2>新しい日記</h2>
+				<PostList posts={posts} />
+				<p class="more"><a href={url('blog/')}>すべての日記を見る →</a></p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

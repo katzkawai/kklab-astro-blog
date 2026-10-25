@@ -1,0 +1,37 @@
+---
+import AboutHeroImage from '../assets/hana-about.jpg';
+import Layout from '../layouts/BlogPost.astro';
+import { SITE_AFFILIATION, SITE_AUTHOR, SITE_CONTACT } from '../consts';
+---
+
+<Layout
+	title="ハナちゃんについて"
+	description="フレンチ・ブルドッグのハナちゃんのプロフィールです。"
+	heroImage={AboutHeroImage}
+>
+	<h2>プロフィール</h2>
+	<table>
+		<tbody>
+			<tr><th>名前</th><td>ハナ（ハナちゃん）</td></tr>
+			<tr><th>犬種</th><td>フレンチ・ブルドッグ</td></tr>
+			<tr><th>性別</th><td>女の子</td></tr>
+			<tr><th>誕生日</th><td>2025年10月12日（1歳）</td></tr>
+			<tr><th>毛色</th><td>クリーム（フォーン）</td></tr>
+			<tr><th>好きなもの</th><td>ささみ、ひなたぼっこ、ピンクのぬいぐるみ</td></tr>
+			<tr><th>苦手なもの</th><td>掃除機、雷、お風呂</td></tr>
+		</tbody>
+	</table>
+
+	<h2>このブログについて</h2>
+	<p>
+		「ハナちゃん日記」は、わが家にやってきたフレンチ・ブルドッグのハナちゃんの成長記録です。
+		いびきをかいて眠る姿、ぶうぶう鳴きながらおやつをねだる顔、はじめての体験にきょとんとする表情——
+		毎日の小さなできごとを、写真とともに書き残していきます。
+	</p>
+
+	<h2>書いている人</h2>
+	<p>
+		{SITE_AUTHOR}（{SITE_AFFILIATION}）<br />
+		連絡先：<a href={`mailto:${SITE_CONTACT}`}>{SITE_CONTACT}</a>
+	</p>
+</Layout>

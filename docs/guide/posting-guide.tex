@@ -1,0 +1,403 @@
+%! TEX program = lualatex
+\documentclass[a4paper,11pt]{ltjsarticle}
+
+\usepackage[ipaex]{luatexja-preset}
+\usepackage[margin=25mm]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fvextra}
+\usepackage[most]{tcolorbox}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{hanapink}{HTML}{E8577A}
+\definecolor{hanabrown}{HTML}{4A3428}
+\definecolor{hanacream}{HTML}{FFF4E8}
+
+\hypersetup{colorlinks=true,linkcolor=hanabrown,urlcolor=hanapink,
+  pdftitle={「ハナちゃん日記」投稿ガイド},pdfauthor={河合勝彦}}
+
+% コード・コマンド表示用
+\DefineVerbatimEnvironment{code}{Verbatim}{%
+  breaklines,breakanywhere,fontsize=\small,
+  frame=single,framesep=3mm,rulecolor=\color{hanabrown!40}}
+\newcommand{\file}[1]{\texttt{#1}}
+
+% 注意・ヒント用の枠
+\newtcolorbox{hint}[1][ヒント]{%
+  colback=hanacream,colframe=hanapink,fonttitle=\bfseries,
+  title={#1},breakable,arc=2mm}
+
+\title{「ハナちゃん日記」投稿ガイド\\[0.5em]
+  \large Astro製ブログの記事の書き方・公開のしかた}
+\author{河合勝彦\\[0.3em]
+  \small 名古屋市立大学大学院経済学研究科\\
+  \small \href{mailto:kkawai@econ.nagoya-cu.ac.jp}{\texttt{kkawai@econ.nagoya-cu.ac.jp}}}
+\date{2026年10月26日}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+本ガイドは、フレンチ・ブルドッグのハナちゃんの日記ブログ「ハナちゃん日記」に記事を追加・修正し、公開するまでの手順をまとめたものです。サイトは静的サイトジェネレーター Astro で作られ、GitHub Pages で公開しています。記事は Markdown ファイルで書き、GitHub にプッシュすると自動で公開されます。
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+%======================================================================
+\section{サイトのしくみ}
+%======================================================================
+
+\subsection{基本情報}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+項目 & 内容 \\
+\midrule
+公開URL & \url{https://katzkawai.github.io/kklab-astro-blog/} \\
+リポジトリ & \url{https://github.com/katzkawai/kklab-astro-blog} \\
+使用ツール & Astro 7（ブログテンプレートをもとに作成） \\
+公開方法 & GitHub Actions による自動ビルド $\to$ GitHub Pages \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{公開までの流れ}
+
+記事の公開は、次の流れで行います。
+
+\begin{enumerate}
+  \item \file{src/content/blog/} に Markdown ファイル（\file{.md}）を作る
+  \item 手元のパソコンで表示を確認する（省略可）
+  \item Git でコミットし、GitHub の \file{main} ブランチへプッシュする
+  \item GitHub Actions が自動でサイトをビルドし、数分後に公開される
+\end{enumerate}
+
+HTML を直接書く必要はありません。Markdown で本文を書けば、デザインの整ったページが自動で作られます。
+
+\subsection{フォルダ構成}
+
+記事の追加でさわるのは、主に次の2か所です。
+
+\begin{code}
+kklab-astro-blog/
+├── src/
+│   ├── assets/          ← 画像を置く場所
+│   ├── content/
+│   │   └── blog/        ← 記事（Markdown）を置く場所
+│   ├── components/      ← ヘッダー・フッターなどの部品
+│   ├── layouts/         ← 記事ページのレイアウト
+│   ├── pages/           ← トップ・一覧・プロフィールのページ
+│   └── consts.ts        ← サイト名・著者名などの設定
+├── public/              ← favicon など、そのまま公開するファイル
+├── docs/guide/          ← このガイド
+├── astro.config.mjs     ← Astro の設定（公開URLなど）
+└── .github/workflows/   ← 自動公開の設定
+\end{code}
+
+%======================================================================
+\section{はじめての準備}
+%======================================================================
+
+手元のパソコンで記事を書いて確認する場合は、最初に一度だけ次の準備をします（GitHub のWeb画面だけで投稿する場合は\ref{sec:web}節を参照）。
+
+\subsection{必要なソフトウェア}
+
+\begin{itemize}
+  \item \textbf{Git}：変更履歴の管理と GitHub へのアップロードに使います。
+  \item \textbf{Node.js}（バージョン 22.23 以上、推奨は 24）：Astro を動かすのに使います。
+  \item \textbf{テキストエディタ}：Visual Studio Code など。Markdown のプレビュー機能があると便利です。
+\end{itemize}
+
+\subsection{リポジトリの取得と初期設定}
+
+ターミナルで次のコマンドを実行します。
+
+\begin{code}
+git clone https://github.com/katzkawai/kklab-astro-blog.git
+cd kklab-astro-blog
+npm install
+\end{code}
+
+\file{npm install} は、Astro などの必要なパッケージをダウンロードします。初回は数分かかることがあります。
+
+%======================================================================
+\section{新しい記事を書く}
+%======================================================================
+
+\subsection{ファイルを作る}
+
+\file{src/content/blog/} の中に、新しい Markdown ファイルを作ります。\textbf{ファイル名がそのまま記事のURLになる}ので、半角英数字とハイフンで名前をつけてください。
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+ファイル名 & 公開されるURL \\
+\midrule
+\file{hana-first-walk.md} & \file{.../kklab-astro-blog/blog/hana-first-walk/} \\
+\file{2026-11-03-dogrun.md} & \file{.../kklab-astro-blog/blog/2026-11-03-dogrun/} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{hint}[ファイル名のコツ]
+日本語やスペースはURLが読みにくくなるため避けましょう。\file{2026-11-03-dogrun.md} のように日付を先頭につけると、フォルダ内で並べたときに時系列順になって管理しやすくなります。
+\end{hint}
+
+\subsection{記事のひな形}
+
+ファイルの中身は、次のように書きます。先頭の \texttt{-{}-{}-} で囲まれた部分を\textbf{フロントマター}と呼び、記事のタイトルや日付などの情報を書きます。その下が本文です。
+
+\begin{code}
+---
+title: 'はじめてのドッグラン'
+description: '近所のドッグランでお友だちがたくさんできました。'
+pubDate: '2026-11-03'
+heroImage: '../../assets/hana-dogrun.jpg'
+tags: ['お出かけ', 'お友だち']
+---
+
+今日は、はじめてドッグランに行ってきました。
+
+## 大きなわんちゃんにびっくり
+
+入ってすぐ、ゴールデン・レトリーバーにあいさつされて……
+\end{code}
+
+\subsection{フロントマターの項目}
+
+\begin{center}
+\begin{tabular}{@{}llp{0.5\linewidth}@{}}
+\toprule
+項目 & 必須 & 説明 \\
+\midrule
+\file{title} & ○ & 記事のタイトル \\
+\file{description} & ○ & 一覧ページに表示される短い紹介文（1〜2文） \\
+\file{pubDate} & ○ & 公開日。\file{'2026-11-03'} の形式で書く \\
+\file{updatedDate} & & 更新日。記事を修正したときに追加すると「更新」と表示される \\
+\file{heroImage} & & 記事の先頭とカードに表示する画像（\ref{sec:image}節） \\
+\file{tags} & & タグ。\file{['お散歩', 'はじめて']} のように書く \\
+\file{draft} & & \file{true} にすると下書き扱いになり、公開されない \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{hint}[注意]
+フロントマターの書き方を間違えると、ビルドが失敗して公開されません。特に次の点に気をつけてください。
+\begin{itemize}[nosep]
+  \item 先頭と末尾の \texttt{-{}-{}-} は、半角ハイフン3つ
+  \item \file{title:} のコロンのあとには半角スペース
+  \item 値は半角の \texttt{'}（シングルクォート）で囲む
+  \item 日付は \file{YYYY-MM-DD} 形式
+\end{itemize}
+\end{hint}
+
+\subsection{本文の書き方（Markdown）}
+
+本文では、次のような Markdown の記法が使えます。
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+書き方 & 表示 \\
+\midrule
+\verb|## 見出し| & 中見出し \\
+\verb|### 小見出し| & 小見出し \\
+\verb|**太字**| & \textbf{太字} \\
+\verb|- 項目| & 箇条書き \\
+\verb|1. 項目| & 番号付きリスト \\
+\verb|> 引用文| & 引用 \\
+\verb|[文字](https://...)| & リンク \\
+\verb|![説明](../../assets/xx.jpg)| & 画像 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+表は次のように書きます。
+
+\begin{code}
+| 項目 | 記録 |
+| --- | --- |
+| 歩いた時間 | 約15分 |
+| 歩いた距離 | 約400メートル |
+\end{code}
+
+\begin{hint}[段落と改行]
+段落を分けるときは、空行を1行入れます。日本語の文章を途中で改行すると、表示したときに余分な空白が入ることがあります。\textbf{1つの段落は改行せずに1行で書く}のがおすすめです。
+\end{hint}
+
+%======================================================================
+\section{画像を使う}\label{sec:image}
+%======================================================================
+
+\subsection{画像ファイルを置く}
+
+写真は \file{src/assets/} フォルダに置きます。ファイル名は半角英数字にしてください（例：\file{hana-dogrun.jpg}）。JPEG・PNG・WebP が使えます。
+
+Astro はビルド時に画像を自動で縮小・WebP 形式に変換するので、スマートフォンで撮った大きな写真をそのまま置いてもかまいません。ただし、リポジトリが重くならないよう、目安として1枚 5MB 以下にしておくとよいでしょう。
+
+\subsection{記事の先頭画像（ヒーロー画像）}
+
+フロントマターの \file{heroImage} に、記事ファイルから見た画像の場所を書きます。記事は \file{src/content/blog/} にあるので、\file{../../assets/} で \file{src/assets/} を指します。
+
+\begin{code}
+heroImage: '../../assets/hana-dogrun.jpg'
+\end{code}
+
+横長（縦横比 2:1）の画像が最もきれいに表示されます。
+
+\subsection{本文中の画像}
+
+本文の好きな位置に、次のように書きます。\file{[ ]} の中には画像の説明（代替テキスト）を書きます。
+
+\begin{code}
+![芝生で走るハナちゃん](../../assets/hana-dogrun-2.jpg)
+\end{code}
+
+\begin{hint}[プライバシーへの配慮]
+写真に自宅の外観や住所がわかるもの、他の飼い主さんの顔などが写っていないか、公開前に確認しましょう。スマートフォンの写真には撮影場所（位置情報）が記録されていることがあります。元の画像ファイルもそのまま公開されることがあるので、カメラの位置情報をオフにして撮影するか、アップロード前に位置情報を削除してください。
+\end{hint}
+
+%======================================================================
+\section{手元で確認する}
+%======================================================================
+
+公開する前に、自分のパソコンで表示を確認できます。
+
+\begin{code}
+npm run dev
+\end{code}
+
+ターミナルに表示されるアドレス（通常は \url{http://localhost:4321/kklab-astro-blog/}）をブラウザで開きます。開発サーバーを起動したままファイルを保存すると、ブラウザの表示が自動で更新されます。終了するときはターミナルで \texttt{Ctrl + C} を押します。
+
+本番と同じ形でビルドできるか確かめたい場合は、次のコマンドを使います。エラーが出なければ、公開してもビルドは成功します。
+
+\begin{code}
+npm run build
+npm run preview
+\end{code}
+
+%======================================================================
+\section{公開する}
+%======================================================================
+
+\subsection{コミットとプッシュ}
+
+記事ができたら、次のコマンドで GitHub に送ります。
+
+\begin{code}
+git add src/content/blog/2026-11-03-dogrun.md src/assets/hana-dogrun.jpg
+git commit -m "記事を追加：はじめてのドッグラン"
+git push
+\end{code}
+
+\subsection{公開の確認}
+
+プッシュすると、GitHub Actions が自動でビルドと公開を始めます。
+
+\begin{enumerate}
+  \item GitHub のリポジトリページで「Actions」タブを開く
+  \item 一番上の実行（ワークフロー名「Deploy to GitHub Pages」）が緑色のチェックになれば成功
+  \item 2〜3分後に公開URLを開いて、記事が表示されることを確認する
+\end{enumerate}
+
+赤い×印になった場合はビルドに失敗しています。実行をクリックするとエラーの内容が確認できます（\ref{sec:trouble}節）。
+
+%======================================================================
+\section{記事を修正・削除する}
+%======================================================================
+
+\subsection{修正}
+
+Markdown ファイルを編集してプッシュすれば、その内容で公開し直されます。内容を大きく変えたときは、フロントマターに \file{updatedDate} を追加すると、記事に更新日が表示されます。
+
+\begin{code}
+pubDate: '2026-11-03'
+updatedDate: '2026-11-05'
+\end{code}
+
+\subsection{下書き}
+
+書きかけの記事は、フロントマターに \file{draft: true} を書いておくと、プッシュしても公開されません。公開するときは、この行を消すか \file{false} にします。なお、下書きでもリポジトリ（GitHub）上ではファイルの中身が見える点に注意してください。
+
+\subsection{削除}
+
+記事のファイルを削除してプッシュします。
+
+\begin{code}
+git rm src/content/blog/2026-11-03-dogrun.md
+git commit -m "記事を削除：はじめてのドッグラン"
+git push
+\end{code}
+
+%======================================================================
+\section{GitHub のWeb画面だけで投稿する}\label{sec:web}
+%======================================================================
+
+パソコンに Git や Node.js を入れなくても、ブラウザだけで投稿できます。
+
+\begin{enumerate}
+  \item \url{https://github.com/katzkawai/kklab-astro-blog} を開き、\file{src/assets} フォルダへ移動する
+  \item 「Add file」$\to$「Upload files」で写真をアップロードし、「Commit changes」を押す
+  \item \file{src/content/blog} フォルダへ移動し、「Add file」$\to$「Create new file」を選ぶ
+  \item ファイル名（例：\file{2026-11-03-dogrun.md}）を入力し、フロントマターと本文を書く
+  \item 「Commit changes」を押すと、自動でビルドと公開が始まる
+\end{enumerate}
+
+既存の記事を直すときは、ファイルを開いて右上の鉛筆アイコン（Edit）から編集できます。
+
+%======================================================================
+\section{サイト全体の設定を変える}
+%======================================================================
+
+\begin{center}
+\begin{tabular}{@{}lp{0.55\linewidth}@{}}
+\toprule
+変えたいもの & 編集するファイル \\
+\midrule
+サイト名・説明文・著者名・連絡先 & \file{src/consts.ts} \\
+「ハナちゃんについて」のプロフィール & \file{src/pages/about.astro} \\
+トップページの文章・画像 & \file{src/pages/index.astro} \\
+色・文字の大きさ & \file{src/styles/global.css} \\
+ヘッダーのメニュー & \file{src/components/Header.astro} \\
+タブのアイコン & \file{public/favicon.svg} \\
+公開URL & \file{astro.config.mjs} の \file{site} と \file{base} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+たとえばプロフィールの「好きなもの」を変えるには、\file{src/pages/about.astro} の該当する行を書き換えます。
+
+\begin{code}
+<tr><th>好きなもの</th><td>ささみ、ひなたぼっこ、ピンクのぬいぐるみ</td></tr>
+\end{code}
+
+%======================================================================
+\section{困ったときは}\label{sec:trouble}
+%======================================================================
+
+\begin{description}[style=nextline,leftmargin=1em]
+  \item[Actions が赤い×になった]
+    多くはフロントマターの書き間違いか、画像のパス違いです。エラーメッセージに出ているファイル名と行を確認してください。\file{heroImage} の画像が \file{src/assets/} に存在するか、ファイル名の大文字・小文字が一致しているかも確かめます。
+  \item[記事が一覧に出てこない]
+    \file{draft: true} になっていないか、ファイルの拡張子が \file{.md} になっているか、\file{src/content/blog/} の中に置いたかを確認します。
+  \item[記事の順番がおかしい]
+    一覧は \file{pubDate} の新しい順に並びます。日付の書き方を確認してください。
+  \item[プッシュしたのに表示が変わらない]
+    ビルドの完了を待ってから、ブラウザを再読み込み（キャッシュを無視するには \texttt{Ctrl + Shift + R}）してください。
+  \item[\file{git push} が拒否された]
+    GitHub 上で先に別の変更（Web画面での編集など）がされています。\file{git pull} を実行してからもう一度 \file{git push} します。
+\end{description}
+
+\bigskip
+\begin{center}
+\small
+本ガイドに関する問い合わせ先：河合勝彦（名古屋市立大学大学院経済学研究科）\\
+\href{mailto:kkawai@econ.nagoya-cu.ac.jp}{\texttt{kkawai@econ.nagoya-cu.ac.jp}}
+\end{center}
+
+\end{document}

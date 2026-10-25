@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../consts';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul>
+	{posts.map((post) => (
+		<li>
+			<a href={url(`blog/${post.id}/`)}>
+				{post.data.heroImage && <Image width={720} height={360} src={post.data.heroImage} alt="" />}
+				<div class="body">
+					<p class="date">
+						<FormattedDate date={post.data.pubDate} />
+					</p>
+					<h3 class="title">{post.data.title}</h3>
+					<p class="description">{post.data.description}</p>
+				</div>
+			</a>
+		</li>
+	))}
+</ul>
+<style>
+	ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 1.5rem;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+	a {
+		display: block;
+		height: 100%;
+		overflow: hidden;
+		border-radius: 16px;
+		background: #fff;
+		box-shadow: 0 2px 8px rgba(var(--gray), 15%);
+		text-decoration: none;
+		transition: 0.2s ease;
+	}
+	a:hover {
+		box-shadow: var(--box-shadow);
+		transform: translateY(-2px);
+	}
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.body {
+		padding: 0.8em 1em 1em;
+	}
+	.title {
+		margin: 0.2em 0;
+		font-size: 1.15em;
+		color: rgb(var(--black));
+	}
+	a:hover .title {
+		color: var(--accent);
+	}
+	.date,
+	.description {
+		margin: 0;
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+	}
+</style>
