@@ -34,14 +34,14 @@
 \author{河合勝彦\\[0.3em]
   \small 名古屋市立大学大学院経済学研究科\\
   \small \href{mailto:kkawai@econ.nagoya-cu.ac.jp}{\texttt{kkawai@econ.nagoya-cu.ac.jp}}}
-\date{2026年10月26日}
+\date{2026年10月28日}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-本ガイドは、フレンチ・ブルドッグのハナちゃんの日記ブログ「ハナちゃん日記」に記事を追加・修正し、公開するまでの手順をまとめたものです。サイトは静的サイトジェネレーター Astro で作られ、GitHub Pages で公開しています。記事は Markdown ファイルで書き、GitHub にプッシュすると自動で公開されます。
+本ガイドは、フレンチ・ブルドッグのハナちゃんの日記ブログ「ハナちゃん日記」に記事を追加・修正し、公開するまでの手順をまとめたものです。サイトは静的サイトジェネレーター Astro で作られ、GitHub Pages で公開しています。記事は Markdown ファイルで書き、GitHub にプッシュすると自動で公開されます。また、このリポジトリをコピーして自分のブログとして公開する方法も\ref{sec:own}節で説明します。
 \end{abstract}
 
 \tableofcontents
@@ -100,7 +100,7 @@ kklab-astro-blog/
 \end{code}
 
 %======================================================================
-\section{はじめての準備}
+\section{はじめての準備}\label{sec:prep}
 %======================================================================
 
 手元のパソコンで記事を書いて確認する場合は、最初に一度だけ次の準備をします（GitHub のWeb画面だけで投稿する場合は\ref{sec:web}節を参照）。
@@ -126,7 +126,7 @@ npm install
 \file{npm install} は、Astro などの必要なパッケージをダウンロードします。初回は数分かかることがあります。
 
 %======================================================================
-\section{新しい記事を書く}
+\section{新しい記事を書く}\label{sec:write}
 %======================================================================
 
 \subsection{ファイルを作る}
@@ -263,7 +263,7 @@ heroImage: '../../assets/hana-dogrun.jpg'
 \end{hint}
 
 %======================================================================
-\section{手元で確認する}
+\section{手元で確認する}\label{sec:local}
 %======================================================================
 
 公開する前に、自分のパソコンで表示を確認できます。
@@ -282,7 +282,7 @@ npm run preview
 \end{code}
 
 %======================================================================
-\section{公開する}
+\section{公開する}\label{sec:publish}
 %======================================================================
 
 \subsection{コミットとプッシュ}
@@ -351,7 +351,7 @@ git push
 既存の記事を直すときは、ファイルを開いて右上の鉛筆アイコン（Edit）から編集できます。
 
 %======================================================================
-\section{サイト全体の設定を変える}
+\section{サイト全体の設定を変える}\label{sec:settings}
 %======================================================================
 
 \begin{center}
@@ -375,6 +375,177 @@ git push
 \begin{code}
 <tr><th>好きなもの</th><td>ささみ、ひなたぼっこ、ピンクのぬいぐるみ</td></tr>
 \end{code}
+
+%======================================================================
+\section{このブログをもとに自分のブログを作る}\label{sec:own}
+%======================================================================
+
+このリポジトリをまるごとコピーして、自分の GitHub アカウントで「自分のブログ」として公開する手順です。ハナちゃんの記事や写真を自分のものに置き換えれば、デザインや自動公開のしくみはそのまま使えます。
+
+\subsection{全体の流れ}
+
+\begin{enumerate}
+  \item GitHub のアカウントと、プッシュのための認証を用意する
+  \item このリポジトリを手元のパソコンにクローン（コピー）する
+  \item GitHub に自分用の空のリポジトリを作る
+  \item プッシュ先（送り先）を自分のリポジトリに切り替える
+  \item 公開URLやサイト名などの設定を自分のものに書き換える
+  \item 手元で確認して、自分のリポジトリへプッシュする
+  \item GitHub Pages を有効にして、公開を確認する
+\end{enumerate}
+
+以下では、GitHub のユーザー名を \file{<ユーザー名>}、新しく作るリポジトリの名前を \file{<リポジトリ名>} と書きます。自分のものに置き換えて読んでください（\file{<} と \file{>} は入力しません）。
+
+\begin{hint}[「Fork」との違い]
+GitHub のリポジトリページにある「Fork」ボタンでもコピーは作れます。ただしフォークしたリポジトリでは GitHub Actions が最初は止まっていて手動で有効にする必要があるなど、初めての方にはわかりにくい点があります。本ガイドでは、クローンして新しいリポジトリへプッシュする、いちばん見通しのよい方法を説明します。
+\end{hint}
+
+\subsection{手順1：GitHub アカウントと認証の準備}
+
+\begin{itemize}
+  \item GitHub のアカウントを持っていなければ、\url{https://github.com/} で無料で作成します。ユーザー名は公開URLの一部になるので、半角英数字で読みやすいものにしましょう。
+  \item Git と Node.js をインストールしておきます（\ref{sec:prep}節）。
+  \item パソコンから GitHub へプッシュするには「認証」が必要です。いちばん手軽なのは GitHub CLI（\file{gh}）を \url{https://cli.github.com/} からインストールし、ターミナルで次を実行する方法です。
+\end{itemize}
+
+\begin{code}
+gh auth login
+\end{code}
+
+質問には「GitHub.com」「HTTPS」「Yes」「Login with a web browser」の順に答え、表示された8桁のコードをブラウザに入力すればログインが完了します。この設定は一度行えば、以降の \file{git push} でそのまま使われます。
+
+\begin{hint}[パスワードを聞かれたら]
+\file{gh} を使わない場合、\file{git push} のときにユーザー名とパスワードを聞かれることがあります。ここで入力するのは GitHub にログインするときのパスワードではなく、GitHub の「Settings」$\to$「Developer settings」$\to$「Personal access tokens」で作る\textbf{パーソナルアクセストークン}です。ログイン用のパスワードを入れても拒否されるので注意してください。
+\end{hint}
+
+\subsection{手順2：クローンする}
+
+ターミナル（Windows なら Git Bash か PowerShell、Mac なら「ターミナル」）を開き、ブログを置きたいフォルダに移動してから次を実行します。
+
+\begin{code}
+git clone https://github.com/katzkawai/kklab-astro-blog.git <リポジトリ名>
+cd <リポジトリ名>
+npm install
+\end{code}
+
+1行目の最後の \file{<リポジトリ名>} は、手元に作るフォルダの名前です。手順3で作るリポジトリと同じ名前にしておくとわかりやすいでしょう（省略すると \file{kklab-astro-blog} という名前になります）。すでに\ref{sec:prep}節の手順でクローンしてある場合は、そのフォルダをそのまま使ってかまいません。
+
+\subsection{手順3：GitHub に自分のリポジトリを作る}
+
+\begin{enumerate}
+  \item GitHub にログインし、右上の「\textbf{+}」$\to$「\textbf{New repository}」を選ぶ
+  \item 「Repository name」に \file{<リポジトリ名>} を入力する。半角英数字とハイフンだけを使う（例：\file{my-dog-blog}）
+  \item 「\textbf{Public}」を選ぶ（無料プランで GitHub Pages を使うには Public が必要）
+  \item 「Add a README file」「Add .gitignore」「Choose a license」は\textbf{すべてチェックを外したまま}にする（中身が空のリポジトリにする）
+  \item 「\textbf{Create repository}」を押す
+\end{enumerate}
+
+作成後に表示される画面（コマンドの説明が並んだページ）はそのままにして、次の手順に進みます。
+
+\begin{hint}[リポジトリ名がURLになる]
+公開URLは \file{https://<ユーザー名>.github.io/<リポジトリ名>/} になります。たとえばユーザー名が \file{taro}、リポジトリ名が \file{my-dog-blog} なら、\file{https://taro.github.io/my-dog-blog/} です。あとから変えることもできますが、そのときは手順5の設定も合わせて直す必要があります。
+\end{hint}
+
+\subsection{手順4：プッシュ先を自分のリポジトリに切り替える}
+
+クローンした直後は、プッシュ先（Git では \file{origin} と呼びます）がもとのハナちゃん日記のリポジトリになっています。これを自分のリポジトリに切り替えます。
+
+\begin{code}
+git remote set-url origin https://github.com/<ユーザー名>/<リポジトリ名>.git
+git remote -v
+\end{code}
+
+2行目の結果が次のように自分のユーザー名とリポジトリ名になっていれば、切り替え完了です。
+
+\begin{code}
+origin  https://github.com/<ユーザー名>/<リポジトリ名>.git (fetch)
+origin  https://github.com/<ユーザー名>/<リポジトリ名>.git (push)
+\end{code}
+
+\subsection{手順5：設定を自分のものに書き換える}
+
+テキストエディタで次の2つのファイルを開き、書き換えます。
+
+\paragraph{(a) 公開URL：\file{astro.config.mjs}}
+
+\file{site} と \file{base} の2行を、自分のユーザー名とリポジトリ名に合わせます。
+
+\begin{code}
+site: 'https://<ユーザー名>.github.io',
+base: '/<リポジトリ名>',
+\end{code}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & ハナちゃん日記（現在） & 例：taro さんの my-dog-blog \\
+\midrule
+\file{site} & \file{'https://katzkawai.org'} & \file{'https://taro.github.io'} \\
+\file{base} & \file{'/kklab-astro-blog'} & \file{'/my-dog-blog'} \\
+公開URL & \file{https://katzkawai.org/kklab-astro-blog/} & \file{https://taro.github.io/my-dog-blog/} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{hint}[ここを間違えると表示がくずれる]
+\file{base} がリポジトリ名と合っていないと、ページは開けても CSS や画像が読み込まれず、まっ白な表示になります。先頭のスラッシュ（\file{/}）を忘れずに、大文字・小文字もリポジトリ名と正確に合わせてください。なお、リポジトリ名を \file{<ユーザー名>.github.io} にした場合だけは、公開URLが \file{https://<ユーザー名>.github.io/} になるので、\file{base} の行を削除します。独自ドメインを使う場合は \file{site} をそのドメインにします（ハナちゃん日記では \file{katzkawai.org} を使っています）。
+\end{hint}
+
+\paragraph{(b) サイト名・著者名：\file{src/consts.ts}}
+
+サイト名、説明文、著者名、所属、連絡先を自分のものにします。
+
+\begin{code}
+export const SITE_TITLE = 'ポチの日記';
+export const SITE_DESCRIPTION = '柴犬のポチ（2歳・男の子）の毎日をつづる日記です。';
+export const SITE_AUTHOR = '山田太郎';
+export const SITE_AFFILIATION = '東京都';
+export const SITE_CONTACT = 'taro@example.com';
+\end{code}
+
+\file{SITE\_AUTHOR}・\file{SITE\_AFFILIATION}・\file{SITE\_CONTACT} は、フッターと「〜について」ページに表示されます。公開したくない項目は \file{''}（空）にするか、\file{src/components/Footer.astro} と \file{src/pages/about.astro} の該当行を削除してください。
+
+\paragraph{(c) あとで直せばよいもの}
+
+トップページの文章（\file{src/pages/index.astro}）、プロフィール（\file{src/pages/about.astro}）、画像（\file{src/assets/}）、タブのアイコン（\file{public/favicon.svg}）は、\ref{sec:settings}節を参考に、公開してから少しずつ自分のものに置き換えていけば十分です。
+
+\begin{hint}[サンプル記事の消し方]
+ハナちゃんの記事3本は \file{src/content/blog/} にあります。自分の記事を1本書いて表示を確認したあとで、\file{git rm src/content/blog/hana-*.md} のように削除すると安心です。ただし画像 \file{src/assets/hana-about.jpg} はトップページとプロフィールページでも使っているので、別の画像に差し替えるまで消さないでください（消すとビルドが失敗します）。
+\end{hint}
+
+\subsection{手順6：手元で確認してプッシュする}
+
+まず手元で表示を確認します（\ref{sec:local}節）。アドレスの末尾は、自分のリポジトリ名になっています。
+
+\begin{code}
+npm run dev
+\end{code}
+
+\file{http://localhost:4321/<リポジトリ名>/} をブラウザで開き、サイト名などが自分のものに変わっていれば OK です。\texttt{Ctrl + C} で止め、変更をコミットして自分のリポジトリへプッシュします。
+
+\begin{code}
+git add -A
+git commit -m "自分のブログ用に設定を変更"
+git push -u origin main
+\end{code}
+
+\file{-u origin main} をつけるのは初回だけで、2回目以降は \file{git push} だけでかまいません。ブラウザで自分のリポジトリページを再読み込みし、ファイル一覧が表示されればプッシュ成功です。
+
+\subsection{手順7：GitHub Pages を有効にして公開する}
+
+\begin{enumerate}
+  \item 自分のリポジトリページで「\textbf{Settings}」タブを開き、左のメニューから「\textbf{Pages}」を選ぶ
+  \item 「Build and deployment」の「Source」を「\textbf{GitHub Actions}」に変える
+  \item 「\textbf{Actions}」タブを開く。手順6のプッシュで始まった「Deploy to GitHub Pages」が赤い×で終わっていたら、左の一覧から「Deploy to GitHub Pages」を選び、右側の「\textbf{Run workflow}」$\to$「Run workflow」で実行し直す
+  \item 緑色のチェックになったら、\file{https://<ユーザー名>.github.io/<リポジトリ名>/} を開く
+\end{enumerate}
+
+自分のブログが表示されれば完成です。以降の記事の書き方・公開のしかたは、\ref{sec:write}節から\ref{sec:publish}節までと同じです。もとのリポジトリ（ハナちゃん日記）とはつながっていないので、ハナちゃん日記側の更新を気にする必要はありません。
+
+\begin{hint}[最初のプッシュで Actions が失敗するのはふつうです]
+GitHub Pages を有効にする前にプッシュすると、ビルドは成功しても最後の公開（deploy）の段階で失敗します。これは設定の順番によるもので、記事や設定の間違いではありません。Pages を有効にしてから「Run workflow」で実行し直せば成功します。
+\end{hint}
 
 %======================================================================
 \section{困ったときは}\label{sec:trouble}

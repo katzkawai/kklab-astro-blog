@@ -5,6 +5,7 @@
 
 - 公開URL: https://katzkawai.org/kklab-astro-blog/
 - 投稿ガイド: [`docs/guide/posting-guide.pdf`](docs/guide/posting-guide.pdf)（ソース: `docs/guide/posting-guide.tex`）
+- このリポジトリをコピーして自分のブログとして公開する手順は、投稿ガイドの「このブログをもとに自分のブログを作る」の節を参照してください。
 
 ## 記事の追加
 
